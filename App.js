@@ -1,20 +1,84 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState, createContext, useEffect } from "react";
 
-export default function App() {
+// route
+import AuthNavigator from "./src/route/auth/AuthNavigator";
+import DashboardNavigator from "./src/route/dashboard/DashboardNavigator";
+
+// api
+import { fetchUserProfile } from "./src/api/AuthApi";
+
+// utils
+import RenderIf from "./src/utils/RenderIf";
+import { getToken } from "./src/utils/Token";
+
+const Stack = createNativeStackNavigator();
+
+export const AuthContext = createContext();
+export const UserContext = createContext();
+
+const App = () => {
+  const [token, setToken] = useState(null);
+  const [profileImg, setProfileImg] = useState(null);
+
+  // const getToken = async () => {
+  //   try {
+  //     setToken(await AsyncStorage.getItem("token"));
+  //   } catch (e) {
+  //     alert("Error");
+  //   }
+  // };
+
+  useEffect(() => {
+    getToken()
+      .then((result) => {
+        setToken(result);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    if (token) {
+      fetchUserProfile(token)
+        .then((result) => {
+          setProfileImg(result.image);
+        })
+        .catch((e) => {
+          // show error message
+          console.log(e.message?.errors);
+        });
+    }
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <AuthContext.Provider value={[token, setToken]}>
+        <UserContext.Provider value={[profileImg, setProfileImg]}>
+          <NavigationContainer>
+            <RenderIf isTrue={token == null}>
+              <Stack.Navigator>
+                <Stack.Screen
+                  component={AuthNavigator}
+                  name="Auth"
+                  options={{ headerShown: false }}
+                />
+              </Stack.Navigator>
+            </RenderIf>
+            <RenderIf isTrue={token != null}>
+              <Stack.Navigator>
+                <Stack.Screen
+                  component={DashboardNavigator}
+                  name="Dashboard"
+                  options={{ headerShown: false }}
+                />
+              </Stack.Navigator>
+            </RenderIf>
+          </NavigationContainer>
+        </UserContext.Provider>
+      </AuthContext.Provider>
+    </>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
