@@ -20,7 +20,7 @@ const extractError = (raw) => {
   };
 };
 
-export const fetchPopularPost = async () => {
+export const fetchPopularPosts = async () => {
   return new Promise(async (resolve, reject) => {
     const subUrl = "api/post/popular";
 
@@ -41,6 +41,34 @@ export const fetchAllPosts = async (token) => {
 
     try {
       const response = await axiosInstance.get(subUrl, postHeader);
+      resolve(response.data);
+    } catch (error) {
+      reject(extractError(error));
+    }
+  });
+};
+
+export const fetchPost = async (token, id) => {
+  return new Promise(async (resolve, reject) => {
+    const subUrl = "api/post/" + id;
+
+    postHeader.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const response = await axiosInstance.get(subUrl, postHeader);
+      resolve(response.data);
+    } catch (error) {
+      reject(extractError(error));
+    }
+  });
+};
+
+export const fetchMorePosts = async (token, nextPage) => {
+  return new Promise(async (resolve, reject) => {
+    postHeader.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const response = await axios.get(nextPage, postHeader);
       resolve(response.data);
     } catch (error) {
       reject(extractError(error));

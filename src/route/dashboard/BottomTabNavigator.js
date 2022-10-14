@@ -7,8 +7,11 @@ import React, { useContext } from "react";
 import Cart from "../../screen/cart/Cart";
 import Favorite from "../../screen/favorite/Favorite";
 import Home from "../../screen/home/Home";
-import ProfileIcon from "../../component/home/header/ProfileIcon";
 import Search from "../../screen/search/Search";
+
+// component
+import BackButton from "../../component/os-mobile-app/backButton/BackButton";
+import ProfileIcon from "../../component/home/header/ProfileIcon";
 
 const Tab = createBottomTabNavigator();
 
@@ -61,9 +64,27 @@ const BottomTabNavigator = () => {
             headerRight: () => <ProfileIcon profileImg={profileImg} />,
           }}
         />
-        <Tab.Screen name="Search" component={Search} />
-        <Tab.Screen name="Cart" component={Cart} />
-        <Tab.Screen name="Favorite" component={Favorite} />
+        <Tab.Screen
+          name="Search"
+          component={Search}
+          options={{
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <Tab.Screen
+          name="Cart"
+          component={Cart}
+          options={{
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <Tab.Screen
+          name="Favorite"
+          component={Favorite}
+          options={{
+            headerLeft: () => <BackButton />,
+          }}
+        />
       </Tab.Navigator>
     </>
   );

@@ -1,6 +1,5 @@
-import { StyleSheet } from "react-native";
-import { AuthContext } from "../../../../../App";
 import { Colors } from "../../../../constant/Colors";
+import { StyleSheet } from "react-native";
 import fonts from "../../../../utils/fonts";
 
 const styles = StyleSheet.create({
@@ -15,7 +14,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    width: "100%",
+    width: 320,
   },
   image: {
     borderColor: Colors.yellow,

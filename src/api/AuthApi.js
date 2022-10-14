@@ -77,3 +77,18 @@ export const actionLogin = async (email, password) => {
     }
   });
 };
+
+export const actionLogout = async (token) => {
+  return new Promise(async (resolve, reject) => {
+    const subUrl = "api/logout";
+
+    postHeader.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const response = await axiosInstance.delete(subUrl, postHeader);
+      resolve(response);
+    } catch (error) {
+      reject(extractError(error));
+    }
+  });
+};

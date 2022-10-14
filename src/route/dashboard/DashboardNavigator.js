@@ -6,6 +6,11 @@ import React from "react";
 import Detail from "../../screen/post/detail/Detail";
 import EditProfile from "../../screen/profile/edit/EditProfile";
 import ShowProfile from "../../screen/profile/show/ShowProfile";
+import BackButton from "../../component/os-mobile-app/backButton/BackButton";
+import HeaderRight from "../../component/detail/headerRight/HeaderRight";
+
+// constant
+import { Colors } from "../../constant/Colors";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,9 +23,34 @@ const DashboardNavigator = () => {
           name="BottomTab"
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Detail" component={Detail} />
-        <Stack.Screen name="ShowProfile" component={ShowProfile} />
-        <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen
+          name="Detail"
+          component={Detail}
+          options={{
+            headerTransparent: true,
+            title: "",
+            headerLeft: () => <BackButton />,
+            headerRight: () => <HeaderRight />,
+          }}
+        />
+        <Stack.Screen
+          name="ShowProfile"
+          component={ShowProfile}
+          options={{
+            headerTransparent: true,
+            headerTintColor: Colors.yellow,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{
+            headerTransparent: true,
+            headerTintColor: Colors.yellow,
+            headerLeft: () => <BackButton />,
+          }}
+        />
       </Stack.Navigator>
     </>
   );

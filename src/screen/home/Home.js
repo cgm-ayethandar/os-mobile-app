@@ -5,12 +5,13 @@ import React, { useContext, useEffect, useState } from "react";
 import styles from "./style/Home";
 
 // api
-import { fetchAllPosts } from "../../api/PostApi";
+import { fetchAllPosts, fetchMorePosts } from "../../api/PostApi";
+import { fetchPopularPosts } from "../../api/PostApi";
 
 // component
 import CardLarge from "../../component/home/body/CardLarge";
 import CardSmall from "../../component/home/body/CardSmall";
-import MostPopularPost from "../../component/home/body/MostPopularPost";
+import LatestUploads from "../../component/home/body/LatestUploads";
 import SearchBox from "../../component/home/header/SearchBox";
 import Title from "../../component/home/body/Title";
 
@@ -20,12 +21,36 @@ const Home = () => {
   const [token, setToken] = useContext(AuthContext);
   const [latestProducts, setLatestProducts] = useState([]);
   const [products, setProducts] = useState([]);
+  const [popularProducts, setPopularProducts] = useState([]);
+  const [nextPage, setNextPage] = useState(null);
+
+  const getMoreProducts = () => {
+    fetchMorePosts(token, nextPage)
+      .then((result) => {
+        console.log(result);
+        setProducts([...products, ...result.data]);
+        setNextPage(result.links.next);
+      })
+      .catch((e) => {
+        // show error message
+        console.log(e.message);
+      });
+  };
 
   useEffect(() => {
     fetchAllPosts(token)
       .then((result) => {
         setLatestProducts(result.data.slice(0, 3));
         setProducts(result.data);
+        setNextPage(result.links.next);
+      })
+      .catch((e) => {
+        // show error message
+        console.log(e.message);
+      });
+    fetchPopularPosts(token)
+      .then((result) => {
+        setPopularProducts(result);
       })
       .catch((e) => {
         // show error message
@@ -52,13 +77,14 @@ const Home = () => {
         <SearchBox onChangeText={() => navigation.navigate("Search")} />
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Most popular post */}
-          <MostPopularPost />
-
           {/* Latest Uploads */}
           <Title text={"Latest Uploads"} />
+          <LatestUploads products={latestProducts} />
+
+          {/* Popular posts */}
+          <Title text={"Popular products"} />
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {latestProducts.map((product) => (
+            {popularProducts.map((product) => (
               <CardLarge
                 id={product.id}
                 img={product.images[0].url}
@@ -75,6 +101,7 @@ const Home = () => {
             data={products}
             enableEmptySections={true}
             keyExtractor={(item, index) => index.toString()}
+            onEndReached={getMoreProducts}
             numColumns={2}
             renderItem={ItemView}
           />

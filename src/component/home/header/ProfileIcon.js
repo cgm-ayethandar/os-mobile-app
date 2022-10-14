@@ -16,7 +16,7 @@ const ProfileIcon = ({ profileImg }) => {
   return (
     <>
       <TouchableOpacity
-        onPress={() => navigation.navigate("ShowProfile")}
+        onPress={() => navigation.navigate("ShowProfile", { userId: null })}
         style={{ marginRight: 15 }}
       >
         <RenderIf isTrue={profileImg}>
