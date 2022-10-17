@@ -23,14 +23,6 @@ const App = () => {
   const [token, setToken] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
 
-  // const getToken = async () => {
-  //   try {
-  //     setToken(await AsyncStorage.getItem("token"));
-  //   } catch (e) {
-  //     alert("Error");
-  //   }
-  // };
-
   useEffect(() => {
     getToken()
       .then((result) => {

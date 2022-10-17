@@ -10,6 +10,13 @@ const postHeader = {
   },
 };
 
+const postHeader2 = {
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "multipart/form-data",
+  },
+};
+
 const extractError = (raw) => {
   const error = { ...raw };
 
@@ -32,6 +39,28 @@ export const fetchUserProfile = async (token) => {
 
     try {
       const response = await axiosInstance.get(subUrl, postHeader);
+      resolve(response.data);
+    } catch (error) {
+      reject(extractError(error));
+    }
+  });
+};
+
+export const updateProfile = async (token, data) => {
+  return new Promise(async (resolve, reject) => {
+    var config = {
+      method: "post",
+      url: Constants.api_url + "api/profile",
+      headers: {
+        Authorization: "Bearer " + token,
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
+    };
+
+    try {
+      const response = await axios(config);
       resolve(response.data);
     } catch (error) {
       reject(extractError(error));

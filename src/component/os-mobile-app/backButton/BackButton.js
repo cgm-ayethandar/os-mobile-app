@@ -16,7 +16,7 @@ const BackButton = () => {
         <Ionicons
           color={Colors.yellow}
           name={Icons.back}
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.goBack()}
           size={28}
         />
       </View>

@@ -75,3 +75,31 @@ export const fetchMorePosts = async (token, nextPage) => {
     }
   });
 };
+
+export const likePost = async (token, id) => {
+  return new Promise(async (resolve, reject) => {
+    const subUrl = "api/post/favorite/" + id;
+    postHeader.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const response = await axiosInstance.post(subUrl, postHeader);
+      resolve(response.data);
+    } catch (error) {
+      reject(extractError(error));
+    }
+  });
+};
+
+export const unlikePost = async (token, id) => {
+  return new Promise(async (resolve, reject) => {
+    const subUrl = "api/post/favorite/" + id;
+    postHeader.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const response = await axiosInstance.delete(subUrl, postHeader);
+      resolve(response.data);
+    } catch (error) {
+      reject(extractError(error));
+    }
+  });
+};

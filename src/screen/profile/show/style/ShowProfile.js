@@ -5,41 +5,47 @@ import fonts from "../../../../utils/fonts";
 const styles = StyleSheet.create({
   container: {},
   profileContainer: {
-    width: "100%",
-    paddingTop: 70,
-    paddingBottom: 20,
-    backgroundColor: Colors.avocado,
     alignItems: "center",
+    backgroundColor: Colors.avocado,
+    paddingBottom: 20,
+    paddingTop: 70,
+    width: "100%",
   },
   image: {
-    width: 120,
-    height: 120,
     borderRadius: 60,
+    height: 120,
+    width: 120,
   },
   name: {
-    paddingTop: 10,
     ...fonts.style.bigBold,
     color: Colors.yellow,
+    paddingTop: 10,
   },
   edit: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    width: 70,
-    paddingVertical: 5,
-    backgroundColor: Colors.brown,
     borderRadius: 5,
-    top: 25,
-    right: 10,
-    position: "absolute",
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingVertical: 5,
+    bottom: 160,
+    left: 230,
   },
-  editText: {
+  logoutText: {
     ...fonts.style.regularNormal,
     color: Colors.yellow,
+    textAlign: "center",
   },
   emailText: {
     ...fonts.style.smallNormal,
     color: Colors.brown,
+  },
+  logout: {
+    backgroundColor: Colors.brown,
+    paddingVertical: 5,
+    borderRadius: 5,
+    width: 85,
+    // bottom: 235,
+    // left: 280,
   },
 });
 

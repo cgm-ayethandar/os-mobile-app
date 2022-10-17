@@ -1,10 +1,10 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import styles from "./style/ShowProfile";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from "../../../../App";
 import { useNavigation } from "@react-navigation/native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import React, { useContext, useEffect, useState } from "react";
+import styles from "./style/ShowProfile";
 
 // api
 import { actionLogout, fetchUserProfile } from "../../../api/AuthApi";
@@ -71,21 +71,23 @@ const ShowProfile = ({ route }) => {
             }
             style={styles.image}
           />
+
           <Text style={styles.name}>{profile.name}</Text>
           <Text style={styles.emailText}>{profile.email}</Text>
         </View>
         <RenderIf isTrue={userId == null}>
           <TouchableOpacity style={styles.logout} onPress={logout}>
-            <Text>Logout</Text>
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity
+          <Ionicons
+            color={Colors.yellow}
+            name={Icons.edit}
+            onPress={() =>
+              navigation.navigate("EditProfile", { profile: profile })
+            }
+            size={30}
             style={styles.edit}
-            onPress={() => navigation.navigate("EditProfile")}
-          >
-            <Text style={styles.editText}>Edit</Text>
-            <Ionicons color={Colors.yellow} name={Icons.edit} size={24} />
-          </TouchableOpacity>
+          />
         </RenderIf>
       </View>
     </>
