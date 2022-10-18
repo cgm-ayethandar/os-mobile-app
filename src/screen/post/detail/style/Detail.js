@@ -38,6 +38,10 @@ const styles = StyleSheet.create({
     ...fonts.style.mediumBold,
     color: Colors.avocado,
   },
+  countContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
 });
 
 export default styles;

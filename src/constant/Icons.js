@@ -1,4 +1,5 @@
 export const Icons = {
+  add: "add-outline",
   address: "home-outline",
   back: "arrow-back-outline",
   cart: "cart-outline",
@@ -9,6 +10,7 @@ export const Icons = {
   password: "lock-closed-outline",
   phone: "call-outline",
   profile: "person-circle",
+  remove: "remove-outline",
   search: "search-outline",
   unlike: "heart-outline",
   user: "person-outline",

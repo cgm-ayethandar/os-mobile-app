@@ -8,9 +8,12 @@ import { fetchFavoritePost } from "../../api/PostApi";
 
 // component
 import CardSmall from "../../component/home/body/CardSmall";
+import RenderIf from "../../utils/RenderIf";
+import CustomLoading from "../../component/os-mobile-app/customLoading/CustomLoading";
 
 const Favorite = () => {
   const [token, setToken] = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
 
   const handleLike = (id) => {
@@ -24,16 +27,22 @@ const Favorite = () => {
       });
   };
 
-  useEffect(() => {
+  const getData = () => {
+    setLoading(true);
     fetchFavoritePost(token)
       .then((result) => {
         setProducts(result);
+        setLoading(false);
       })
       .catch((e) => {
         // show error message
         console.log(e.message);
       });
-  });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const ItemView = ({ item }) => {
     return (
@@ -50,15 +59,20 @@ const Favorite = () => {
 
   return (
     <>
-      <View style={styles.container}>
-        <FlatList
-          data={products}
-          enableEmptySections={true}
-          keyExtractor={(item, index) => index.toString()}
-          numColumns={2}
-          renderItem={ItemView}
-        />
-      </View>
+      <RenderIf isTrue={loading}>
+        <CustomLoading />
+      </RenderIf>
+      <RenderIf isTrue={!loading}>
+        <View style={styles.container}>
+          <FlatList
+            data={products}
+            enableEmptySections={true}
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={2}
+            renderItem={ItemView}
+          />
+        </View>
+      </RenderIf>
     </>
   );
 };

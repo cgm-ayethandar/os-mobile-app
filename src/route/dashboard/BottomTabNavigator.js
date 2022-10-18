@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { UserContext } from "../../../App";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import React, { useContext } from "react";
+import { CartContext } from "../../../App";
 
 // screen
 import Cart from "../../screen/cart/Cart";
@@ -13,10 +14,14 @@ import Search from "../../screen/search/Search";
 import BackButton from "../../component/os-mobile-app/backButton/BackButton";
 import ProfileIcon from "../../component/home/header/ProfileIcon";
 
+// constant
+import { Colors } from "../../constant/Colors";
+
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   const [profileImg, setProfileImg] = useContext(UserContext);
+  const [cart, setCart] = useContext(CartContext);
 
   return (
     <>
@@ -76,6 +81,11 @@ const BottomTabNavigator = () => {
           component={Cart}
           options={{
             headerLeft: () => <BackButton />,
+            tabBarBadge: cart.length > 0 && cart.length,
+            tabBarBadgeStyle:
+              cart.length > 0
+                ? { backgroundColor: Colors.avocado }
+                : { opacity: 0 },
           }}
         />
         <Tab.Screen

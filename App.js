@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, createContext, useEffect } from "react";
 
 // route
@@ -18,10 +17,12 @@ const Stack = createNativeStackNavigator();
 
 export const AuthContext = createContext();
 export const UserContext = createContext();
+export const CartContext = createContext();
 
 const App = () => {
   const [token, setToken] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     getToken()
@@ -47,26 +48,28 @@ const App = () => {
     <>
       <AuthContext.Provider value={[token, setToken]}>
         <UserContext.Provider value={[profileImg, setProfileImg]}>
-          <NavigationContainer>
-            <RenderIf isTrue={token == null}>
-              <Stack.Navigator>
-                <Stack.Screen
-                  component={AuthNavigator}
-                  name="Auth"
-                  options={{ headerShown: false }}
-                />
-              </Stack.Navigator>
-            </RenderIf>
-            <RenderIf isTrue={token != null}>
-              <Stack.Navigator>
-                <Stack.Screen
-                  component={DashboardNavigator}
-                  name="Dashboard"
-                  options={{ headerShown: false }}
-                />
-              </Stack.Navigator>
-            </RenderIf>
-          </NavigationContainer>
+          <CartContext.Provider value={[cart, setCart]}>
+            <NavigationContainer>
+              <RenderIf isTrue={token == null}>
+                <Stack.Navigator>
+                  <Stack.Screen
+                    component={AuthNavigator}
+                    name="Auth"
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Navigator>
+              </RenderIf>
+              <RenderIf isTrue={token != null}>
+                <Stack.Navigator>
+                  <Stack.Screen
+                    component={DashboardNavigator}
+                    name="Dashboard"
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Navigator>
+              </RenderIf>
+            </NavigationContainer>
+          </CartContext.Provider>
         </UserContext.Provider>
       </AuthContext.Provider>
     </>

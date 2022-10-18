@@ -14,16 +14,44 @@ import RenderIf from "../../../utils/RenderIf";
 // constant
 import { Colors } from "../../../constant/Colors";
 import { Icons } from "../../../constant/Icons";
+import CustomLoading from "../../../component/os-mobile-app/customLoading/CustomLoading";
 
 const ShowProfile = ({ route }) => {
   const { userId } = route.params;
   const navigation = useNavigation();
   const [token, setToken] = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({});
 
   const deleteToken = async () => {
     await AsyncStorage.removeItem("token");
     setToken(await AsyncStorage.getItem("token"));
+  };
+
+  const getData = () => {
+    if (userId) {
+      setLoading(true);
+      fetchProfile(userId)
+        .then((result) => {
+          setProfile(result);
+          setLoading(false);
+        })
+        .catch((e) => {
+          // show error message
+          console.log(e.message);
+        });
+    } else {
+      setLoading(true);
+      fetchUserProfile(token)
+        .then((result) => {
+          setProfile(result);
+          setLoading(false);
+        })
+        .catch((e) => {
+          // show error message
+          console.log(e.message?.errors);
+        });
+    }
   };
 
   const logout = async () => {
@@ -38,58 +66,45 @@ const ShowProfile = ({ route }) => {
   };
 
   useEffect(() => {
-    if (userId) {
-      fetchProfile(userId)
-        .then((result) => {
-          setProfile(result);
-        })
-        .catch((e) => {
-          // show error message
-          console.log(e.message);
-        });
-    } else {
-      fetchUserProfile(token)
-        .then((result) => {
-          setProfile(result);
-        })
-        .catch((e) => {
-          // show error message
-          console.log(e.message?.errors);
-        });
-    }
-  });
+    getData();
+  }, []);
 
   return (
     <>
-      <View style={styles.container}>
-        <View style={styles.profileContainer}>
-          <Image
-            source={
-              profile.image
-                ? { uri: profile.image }
-                : require("../../../../assets/profile.png")
-            }
-            style={styles.image}
-          />
+      <RenderIf isTrue={loading}>
+        <CustomLoading />
+      </RenderIf>
+      <RenderIf isTrue={!loading}>
+        <View style={styles.container}>
+          <View style={styles.profileContainer}>
+            <Image
+              source={
+                profile.image
+                  ? { uri: profile.image }
+                  : require("../../../../assets/profile.png")
+              }
+              style={styles.image}
+            />
 
-          <Text style={styles.name}>{profile.name}</Text>
-          <Text style={styles.emailText}>{profile.email}</Text>
+            <Text style={styles.name}>{profile.name}</Text>
+            <Text style={styles.emailText}>{profile.email}</Text>
+          </View>
+          <RenderIf isTrue={userId == null}>
+            <TouchableOpacity style={styles.logout} onPress={logout}>
+              <Text style={styles.logoutText}>Logout</Text>
+            </TouchableOpacity>
+            <Ionicons
+              color={Colors.yellow}
+              name={Icons.edit}
+              onPress={() =>
+                navigation.navigate("EditProfile", { profile: profile })
+              }
+              size={30}
+              style={styles.edit}
+            />
+          </RenderIf>
         </View>
-        <RenderIf isTrue={userId == null}>
-          <TouchableOpacity style={styles.logout} onPress={logout}>
-            <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
-          <Ionicons
-            color={Colors.yellow}
-            name={Icons.edit}
-            onPress={() =>
-              navigation.navigate("EditProfile", { profile: profile })
-            }
-            size={30}
-            style={styles.edit}
-          />
-        </RenderIf>
-      </View>
+      </RenderIf>
     </>
   );
 };

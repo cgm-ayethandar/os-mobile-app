@@ -15,6 +15,8 @@ import LatestUploads from "../../component/home/body/LatestUploads";
 import SearchBox from "../../component/home/header/SearchBox";
 import Title from "../../component/home/body/Title";
 import RenderIf from "../../utils/RenderIf";
+import { Colors } from "../../constant/Colors";
+import CustomLoading from "../../component/os-mobile-app/customLoading/CustomLoading";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -39,7 +41,7 @@ const Home = () => {
       });
   };
 
-  useEffect(() => {
+  const getInitialData = () => {
     setLoading(true);
     fetchAllPosts(token)
       .then((result) => {
@@ -47,23 +49,29 @@ const Home = () => {
         setLatestProducts(result.data.slice(0, 3));
         setProducts(result.data);
         setNextPage(result.links.next);
+        setLoading(false);
       })
       .catch((e) => {
         // show error message
         console.log(e.message);
-      })
-      .finally(setLoading(false));
+      });
     fetchPopularPosts(token)
       .then((result) => {
         setLoading(true);
         setPopularProducts(result);
+        setLoading(false);
       })
       .catch((e) => {
         // show error message
         console.log(e.message);
-      })
-      .finally(setLoading(false));
-  });
+      });
+  };
+
+  useEffect(() => {
+    navigation.addListener("focus", () => {
+      getInitialData();
+    });
+  }, []);
 
   const ItemView = ({ item }) => {
     return (
@@ -77,50 +85,50 @@ const Home = () => {
     );
   };
 
-  if (loading) {
-    return <ActivityIndicator size="small" color="#0000ff" />;
-  }
-
   return (
     <>
-      <View style={styles.container}>
-        {/* Search */}
-        <SearchBox onChangeText={() => navigation.navigate("Search")} />
-        <RenderIf isTrue={loading}>
-          <ActivityIndicator size="small" color="#0000ff" />
-        </RenderIf>
+      <RenderIf isTrue={loading}>
+        <CustomLoading />
+      </RenderIf>
+      <RenderIf isTrue={!loading}>
+        <View style={styles.container}>
+          {/* Search */}
+          <SearchBox onChangeText={() => navigation.navigate("Search")} />
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Latest Uploads */}
+            <Title text={"Latest Uploads"} />
+            <LatestUploads products={latestProducts} />
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Latest Uploads */}
-          <Title text={"Latest Uploads"} />
-          <LatestUploads products={latestProducts} />
+            {/* Popular posts */}
+            <Title text={"Popular products"} />
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {popularProducts.map((product) => (
+                <CardLarge
+                  id={product.id}
+                  img={product.images[0].url}
+                  isFavorite={product.isFavorite}
+                  name={product.car_model}
+                  price={product.price}
+                />
+              ))}
+            </ScrollView>
 
-          {/* Popular posts */}
-          <Title text={"Popular products"} />
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {popularProducts.map((product) => (
-              <CardLarge
-                id={product.id}
-                img={product.images[0].url}
-                isFavorite={product.isFavorite}
-                name={product.car_model}
-                price={product.price}
-              />
-            ))}
+            {/* All products */}
+            <Title text={"All Products"} />
+            <FlatList
+              data={products}
+              enableEmptySections={true}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReached={getMoreProducts}
+              numColumns={2}
+              renderItem={ItemView}
+            />
           </ScrollView>
-
-          {/* All products */}
-          <Title text={"All Products"} />
-          <FlatList
-            data={products}
-            enableEmptySections={true}
-            keyExtractor={(item, index) => index.toString()}
-            onEndReached={getMoreProducts}
-            numColumns={2}
-            renderItem={ItemView}
-          />
-        </ScrollView>
-      </View>
+        </View>
+      </RenderIf>
     </>
   );
 };
