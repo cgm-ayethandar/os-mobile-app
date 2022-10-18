@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
+import { Constants } from "../../../constant/Constants";
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    flex: 1,
-    justifyContent: "center",
+    marginTop: Constants.headerHeight,
+    marginHorizontal: 10,
+    marginBottom: 45,
   },
 });
 

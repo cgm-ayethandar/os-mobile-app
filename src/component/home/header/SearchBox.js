@@ -9,18 +9,23 @@ import { Colors } from "../../../constant/Colors";
 // utils
 import RenderIf from "../../../utils/RenderIf";
 
-const SearchBox = ({ text, onChangeText, onPress }) => {
+const SearchBox = ({ value, onChangeText, onPress }) => {
   return (
     <>
       <View style={styles.container}>
-        <Ionicons name="search" size={25} color={Colors.avocado} />
+        <Ionicons
+          name="search"
+          size={25}
+          color={Colors.avocado}
+          style={styles.search}
+        />
         <TextInput
           onChangeText={onChangeText}
           placeholder={"Search Product Name"}
           style={styles.inputField}
-          value={text}
+          value={value}
         />
-        <RenderIf isTrue={text != null}>
+        <RenderIf isTrue={value != ""}>
           <Ionicons
             color={Colors.avocado}
             name="close-circle-outline"

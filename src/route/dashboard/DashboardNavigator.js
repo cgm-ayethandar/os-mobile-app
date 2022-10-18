@@ -37,6 +37,7 @@ const DashboardNavigator = () => {
           name="ShowProfile"
           component={ShowProfile}
           options={{
+            headerTitle: "Show Profile",
             headerTransparent: true,
             headerTintColor: Colors.yellow,
             headerLeft: () => <BackButton />,
@@ -46,6 +47,7 @@ const DashboardNavigator = () => {
           name="EditProfile"
           component={EditProfile}
           options={{
+            headerTitle: "Edit Profile",
             headerTransparent: true,
             headerTintColor: Colors.yellow,
             headerLeft: () => <BackButton />,

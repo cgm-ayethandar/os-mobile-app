@@ -60,7 +60,7 @@ const BottomTabNavigator = () => {
           component={Home}
           name="Home"
           options={{
-            title: "",
+            headerTitle: "",
             headerRight: () => <ProfileIcon profileImg={profileImg} />,
           }}
         />

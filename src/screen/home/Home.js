@@ -1,6 +1,6 @@
 import { AuthContext } from "../../../App";
 import { useNavigation } from "@react-navigation/native";
-import { View, ScrollView, FlatList } from "react-native";
+import { View, ScrollView, FlatList, ActivityIndicator } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./style/Home";
 
@@ -14,11 +14,13 @@ import CardSmall from "../../component/home/body/CardSmall";
 import LatestUploads from "../../component/home/body/LatestUploads";
 import SearchBox from "../../component/home/header/SearchBox";
 import Title from "../../component/home/body/Title";
+import RenderIf from "../../utils/RenderIf";
 
 const Home = () => {
   const navigation = useNavigation();
 
   const [token, setToken] = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
   const [latestProducts, setLatestProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
@@ -38,8 +40,10 @@ const Home = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchAllPosts(token)
       .then((result) => {
+        setLoading(true);
         setLatestProducts(result.data.slice(0, 3));
         setProducts(result.data);
         setNextPage(result.links.next);
@@ -47,15 +51,18 @@ const Home = () => {
       .catch((e) => {
         // show error message
         console.log(e.message);
-      });
+      })
+      .finally(setLoading(false));
     fetchPopularPosts(token)
       .then((result) => {
+        setLoading(true);
         setPopularProducts(result);
       })
       .catch((e) => {
         // show error message
         console.log(e.message);
-      });
+      })
+      .finally(setLoading(false));
   });
 
   const ItemView = ({ item }) => {
@@ -70,11 +77,18 @@ const Home = () => {
     );
   };
 
+  if (loading) {
+    return <ActivityIndicator size="small" color="#0000ff" />;
+  }
+
   return (
     <>
       <View style={styles.container}>
         {/* Search */}
         <SearchBox onChangeText={() => navigation.navigate("Search")} />
+        <RenderIf isTrue={loading}>
+          <ActivityIndicator size="small" color="#0000ff" />
+        </RenderIf>
 
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Latest Uploads */}

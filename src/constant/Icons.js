@@ -1,5 +1,5 @@
 export const Icons = {
-  address: "home",
+  address: "home-outline",
   back: "arrow-back-outline",
   cart: "cart-outline",
   detail: "information-circle-outline",
@@ -7,7 +7,7 @@ export const Icons = {
   like: "heart",
   mail: "mail-outline",
   password: "lock-closed-outline",
-  phone: "call",
+  phone: "call-outline",
   profile: "person-circle",
   search: "search-outline",
   unlike: "heart-outline",

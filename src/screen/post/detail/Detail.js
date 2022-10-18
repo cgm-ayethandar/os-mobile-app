@@ -39,7 +39,7 @@ const Detail = ({ route }) => {
         })
         .catch((e) => {
           // show error message
-          console.log(e.message);
+          console.log(e);
         });
     }
   };

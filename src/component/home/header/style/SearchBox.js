@@ -18,6 +18,9 @@ const styles = StyleSheet.create({
     height: 25,
     width: "80%",
   },
+  search: {
+    marginRight: 10,
+  },
 });
 
 export default styles;

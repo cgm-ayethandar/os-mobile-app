@@ -8,7 +8,7 @@ import styles from "./style/CardSmall";
 import { Colors } from "../../../constant/Colors";
 import { Icons } from "../../../constant/Icons";
 
-const CardSmall = ({ id, img, name, price, isFavorite }) => {
+const CardSmall = ({ id, img, name, price, isFavorite, onPress }) => {
   const navigation = useNavigation();
 
   return (
@@ -21,6 +21,7 @@ const CardSmall = ({ id, img, name, price, isFavorite }) => {
         <Ionicons
           color={Colors.avocado}
           name={isFavorite ? Icons.like : Icons.unlike}
+          onPress={onPress}
           size={25}
           style={styles.likeButton}
         />

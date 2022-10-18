@@ -76,6 +76,21 @@ export const fetchMorePosts = async (token, nextPage) => {
   });
 };
 
+export const fetchFavoritePost = async (token) => {
+  return new Promise(async (resolve, reject) => {
+    const subUrl = "api/post/favorite";
+
+    postHeader.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const response = await axiosInstance.get(subUrl, postHeader);
+      resolve(response.data);
+    } catch (error) {
+      reject(extractError(error));
+    }
+  });
+};
+
 export const likePost = async (token, id) => {
   return new Promise(async (resolve, reject) => {
     const subUrl = "api/post/favorite/" + id;
@@ -97,6 +112,19 @@ export const unlikePost = async (token, id) => {
 
     try {
       const response = await axiosInstance.delete(subUrl, postHeader);
+      resolve(response.data);
+    } catch (error) {
+      reject(extractError(error));
+    }
+  });
+};
+
+export const actionSearch = async (model) => {
+  return new Promise(async (resolve, reject) => {
+    const subUrl = "api/search" + `?car_model=${encodeURIComponent(model)}`;
+
+    try {
+      const response = await axiosInstance.get(subUrl, postHeader);
       resolve(response.data);
     } catch (error) {
       reject(extractError(error));
