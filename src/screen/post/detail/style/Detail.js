@@ -28,6 +28,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: 10,
   },
+  ml: {
+    ...fonts.style.mediumBold,
+    color: Colors.yellow,
+    marginBottom: 5,
+  },
   profile: {
     flexDirection: "row",
     alignItems: "center",
@@ -38,9 +43,21 @@ const styles = StyleSheet.create({
     ...fonts.style.mediumBold,
     color: Colors.avocado,
   },
+  addToCart: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 10,
+  },
   countContainer: {
     flexDirection: "row",
     alignItems: "center",
+    marginLeft: 10,
+  },
+  countText: {
+    ...fonts.style.bigNormal,
+    color: Colors.brown,
+    marginHorizontal: 5,
   },
 });
 

@@ -12,17 +12,21 @@ import { fetchUserProfile } from "./src/api/AuthApi";
 // utils
 import RenderIf from "./src/utils/RenderIf";
 import { getToken } from "./src/utils/Token";
+import { GlobalProvider } from "./src/provider/GlobalProvider";
 
 const Stack = createNativeStackNavigator();
 
 export const AuthContext = createContext();
 export const UserContext = createContext();
-export const CartContext = createContext();
 
 const App = () => {
   const [token, setToken] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
-  const [cart, setCart] = useState([]);
+
+  const deleteToken = async () => {
+    await AsyncStorage.removeItem("token");
+    setToken(await AsyncStorage.getItem("token"));
+  };
 
   useEffect(() => {
     getToken()
@@ -33,6 +37,7 @@ const App = () => {
         console.log(e);
       });
     if (token) {
+      console.log(token);
       fetchUserProfile(token)
         .then((result) => {
           setProfileImg(result.image);
@@ -46,9 +51,9 @@ const App = () => {
 
   return (
     <>
-      <AuthContext.Provider value={[token, setToken]}>
-        <UserContext.Provider value={[profileImg, setProfileImg]}>
-          <CartContext.Provider value={[cart, setCart]}>
+      <GlobalProvider>
+        <AuthContext.Provider value={[token, setToken]}>
+          <UserContext.Provider value={[profileImg, setProfileImg]}>
             <NavigationContainer>
               <RenderIf isTrue={token == null}>
                 <Stack.Navigator>
@@ -69,9 +74,9 @@ const App = () => {
                 </Stack.Navigator>
               </RenderIf>
             </NavigationContainer>
-          </CartContext.Provider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </GlobalProvider>
     </>
   );
 };

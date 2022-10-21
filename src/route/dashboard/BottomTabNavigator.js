@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { UserContext } from "../../../App";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { View } from "react-native";
 import React, { useContext } from "react";
-import { CartContext } from "../../../App";
 
 // screen
 import Cart from "../../screen/cart/Cart";
@@ -16,12 +16,20 @@ import ProfileIcon from "../../component/home/header/ProfileIcon";
 
 // constant
 import { Colors } from "../../constant/Colors";
+import { GlobalContext } from "../../provider/GlobalProvider";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const GLOBAL = useContext(GlobalContext);
+
   const [profileImg, setProfileImg] = useContext(UserContext);
-  const [cart, setCart] = useContext(CartContext);
+  const tabLabels = {
+    home: "Home",
+    search: "Search",
+    cart: "Cart",
+    favorite: "Favorite",
+  };
 
   return (
     <>
@@ -45,6 +53,7 @@ const BottomTabNavigator = () => {
           },
           tabBarActiveTintColor: "#558303",
           tabBarInactiveTintColor: "#F2E880",
+          tabBarLabel: tabLabels[route.name.toLowerCase()],
           tabBarStyle: {
             borderTopLeftRadius: 25,
             borderTopRightRadius: 25,
@@ -73,18 +82,22 @@ const BottomTabNavigator = () => {
           name="Search"
           component={Search}
           options={{
-            headerLeft: () => <BackButton />,
+            headerLeft: () => (
+              <View style={{ marginLeft: 8, marginTop: 5 }}>
+                <BackButton />
+              </View>
+            ),
           }}
         />
         <Tab.Screen
           name="Cart"
           component={Cart}
           options={{
-            headerLeft: () => <BackButton />,
-            tabBarBadge: cart.length > 0 && cart.length,
+            headerShown: false,
+            tabBarBadge: GLOBAL.itemCount,
             tabBarBadgeStyle:
-              cart.length > 0
-                ? { backgroundColor: Colors.avocado }
+              GLOBAL.itemCount > 0
+                ? { backgroundColor: Colors.brown }
                 : { opacity: 0 },
           }}
         />
@@ -92,7 +105,11 @@ const BottomTabNavigator = () => {
           name="Favorite"
           component={Favorite}
           options={{
-            headerLeft: () => <BackButton />,
+            headerLeft: () => (
+              <View style={{ marginLeft: 8, marginTop: 5 }}>
+                <BackButton />
+              </View>
+            ),
           }}
         />
       </Tab.Navigator>

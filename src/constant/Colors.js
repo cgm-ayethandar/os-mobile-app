@@ -5,6 +5,7 @@ export const Colors = {
   error: "#FF3333",
   gray: "#A8A9AD",
   platinum: "#E5E1E6",
+  red: "#d90429",
   white: "#ffffff",
   yellow: "#F2E880",
 };

@@ -1,10 +1,11 @@
+import { AuthContext } from "../../../App";
+import { useNavigation } from "@react-navigation/native";
 import { View, FlatList } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./style/Favorite";
-import { AuthContext } from "../../../App";
 
 // api
-import { fetchFavoritePost } from "../../api/PostApi";
+import { fetchFavoritePost, unlikePost } from "../../api/PostApi";
 
 // component
 import CardSmall from "../../component/home/body/CardSmall";
@@ -12,6 +13,8 @@ import RenderIf from "../../utils/RenderIf";
 import CustomLoading from "../../component/os-mobile-app/customLoading/CustomLoading";
 
 const Favorite = () => {
+  const navigation = useNavigation();
+
   const [token, setToken] = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -20,6 +23,7 @@ const Favorite = () => {
     unlikePost(token, id)
       .then((result) => {
         console.log(result);
+        getData();
       })
       .catch((e) => {
         // show error message
@@ -41,7 +45,9 @@ const Favorite = () => {
   };
 
   useEffect(() => {
-    getData();
+    navigation.addListener("focus", () => {
+      getData();
+    });
   }, []);
 
   const ItemView = ({ item }) => {

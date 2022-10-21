@@ -33,23 +33,25 @@ const ShowProfile = ({ route }) => {
       setLoading(true);
       fetchProfile(userId)
         .then((result) => {
+          console.log(result);
           setProfile(result);
           setLoading(false);
         })
         .catch((e) => {
           // show error message
-          console.log(e.message);
+          console.log(e);
         });
     } else {
       setLoading(true);
       fetchUserProfile(token)
         .then((result) => {
+          console.log(result);
           setProfile(result);
           setLoading(false);
         })
         .catch((e) => {
           // show error message
-          console.log(e.message?.errors);
+          console.log(e);
         });
     }
   };
@@ -66,7 +68,9 @@ const ShowProfile = ({ route }) => {
   };
 
   useEffect(() => {
-    getData();
+    navigation.addListener("focus", () => {
+      getData();
+    });
   }, []);
 
   return (

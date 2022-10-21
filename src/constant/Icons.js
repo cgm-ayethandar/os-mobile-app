@@ -4,6 +4,7 @@ export const Icons = {
   back: "arrow-back-outline",
   cart: "cart-outline",
   detail: "information-circle-outline",
+  delete: "remove-circle",
   edit: "create",
   like: "heart",
   mail: "mail-outline",
@@ -12,6 +13,7 @@ export const Icons = {
   profile: "person-circle",
   remove: "remove-outline",
   search: "search-outline",
+  trash: "trash-outline",
   unlike: "heart-outline",
   user: "person-outline",
 };

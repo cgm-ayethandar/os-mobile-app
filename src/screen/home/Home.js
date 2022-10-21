@@ -1,7 +1,14 @@
 import { AuthContext } from "../../../App";
 import { useNavigation } from "@react-navigation/native";
-import { View, ScrollView, FlatList, ActivityIndicator } from "react-native";
+import {
+  View,
+  ScrollView,
+  FlatList,
+  ActivityIndicator,
+  Text,
+} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import styles from "./style/Home";
 
 // api
@@ -31,7 +38,6 @@ const Home = () => {
   const getMoreProducts = () => {
     fetchMorePosts(token, nextPage)
       .then((result) => {
-        console.log(result);
         setProducts([...products, ...result.data]);
         setNextPage(result.links.next);
       })
@@ -72,6 +78,28 @@ const Home = () => {
       getInitialData();
     });
   }, []);
+
+  const renderFooter = () => {
+    // When no Post to download
+    if (!nextPage) {
+      return (
+        <View style={styles.footer}>
+          <Ionicons
+            name="checkmark-done-circle-outline"
+            size={80}
+            color={Colors.avocado}
+          />
+          <Text style={styles.footerHeader}>You're all Caught Up</Text>
+        </View>
+      );
+    }
+    // Loading for next Downlaod
+    return (
+      <View style={styles.footer}>
+        <ActivityIndicator size="large" color={Colors.avocado} />
+      </View>
+    );
+  };
 
   const ItemView = ({ item }) => {
     return (
@@ -125,6 +153,7 @@ const Home = () => {
               onEndReached={getMoreProducts}
               numColumns={2}
               renderItem={ItemView}
+              ListFooterComponent={renderFooter}
             />
           </ScrollView>
         </View>
