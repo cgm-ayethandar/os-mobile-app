@@ -135,6 +135,7 @@ const Home = () => {
             >
               {popularProducts.map((product) => (
                 <CardLarge
+                  key={product.id}
                   id={product.id}
                   img={product.images[0].url}
                   isFavorite={product.isFavorite}

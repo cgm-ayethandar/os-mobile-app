@@ -11,12 +11,12 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 260,
+    height: 300,
   },
   name: {
     ...fonts.style.regularBold,
     color: Colors.black,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   price: {
     ...fonts.style.bigBold,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginVertical: 10,
+    marginVertical: 5,
   },
   ml: {
     ...fonts.style.mediumBold,

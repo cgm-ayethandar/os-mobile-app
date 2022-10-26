@@ -57,7 +57,6 @@ const Detail = ({ route }) => {
       GLOBAL.setCartProducts(newCart);
       isInCart();
     }
-    count > 0 ? setCount(count - 1) : setCount(0);
   };
 
   const isInCart = () => {
@@ -124,6 +123,7 @@ const Detail = ({ route }) => {
 
   useEffect(() => {
     getData();
+    setCount(itemArr.length);
   }, [itemArr]);
 
   return (
