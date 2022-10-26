@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useEffect, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -12,82 +12,115 @@ import { Icons } from "../../constant/Icons";
 import BackButton from "../../component/os-mobile-app/backButton/BackButton";
 import RenderIf from "../../utils/RenderIf";
 import CustomLoading from "../../component/os-mobile-app/customLoading/CustomLoading";
+import CustomButton from "../../component/os-mobile-app/customButton/CustomButton";
 
 const Cart = () => {
   const navigation = useNavigation();
   const GLOBAL = useContext(GlobalContext);
   const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState(GLOBAL.cartProducts);
   const [groupItemsInCart, setGroupItemsInCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [selectedDelete, setSelectedDelete] = useState(false);
 
-  const getData = () => {
-    setProducts(GLOBAL.cartProducts);
-    const groupItems = products.reduce((results, product) => {
-      (results[product.id] = results[product.id] || []).push(product);
-      return results;
-    }, {});
-    setGroupItemsInCart(groupItems);
-    const cartTotal = products.reduce(
+  const getTotal = () => {
+    return GLOBAL.cartProducts.reduce(
       (total, item) => (total += item.price),
       0
     );
-    setTotal(cartTotal);
-    console.log(groupItemsInCart);
-    GLOBAL.setItemCount(Object.keys(groupItemsInCart).length);
+  };
 
+  const updateItemCount = () => {
+    // GLOBAL.setItemCount(Object.keys(groupItemsInCart).length);
+    GLOBAL.itemCount = Object.keys(groupItemsInCart).length;
+  };
+
+  const getGroupItemsInCart = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const groupItems = GLOBAL.cartProducts.reduce((results, product) => {
+          (results[product.id] = results[product.id] || []).push(product);
+          return results;
+        }, {});
+        resolve(groupItems);
+      } catch (error) {
+        reject(console.log(error));
+      }
+    });
+  };
+
+  const updateGroupItems = () => {
+    getGroupItemsInCart()
+      .then((result) => {
+        setGroupItemsInCart(result);
+      })
+      .catch((e) => {
+        // show error message
+        console.log(e);
+      });
+    console.log("g");
+  };
+
+  const getData = () => {
+    updateGroupItems();
+    setTotal(getTotal());
+    updateItemCount();
     setSelectedDelete(false);
-    console.log(GLOBAL.itemCount);
     setLoading(false);
   };
 
   const deleteAll = (id) => {
-    const newCart = GLOBAL.cartProducts.filter((cp) => cp.id != id);
-    GLOBAL.setCartProducts(newCart);
+    let index = 0;
+    while (index >= 0) {
+      index = GLOBAL.cartProducts.findIndex((cp) => cp.id === id);
 
+      if (index >= 0) {
+        GLOBAL.cartProducts.splice(index, 1);
+      }
+    }
     getData();
-    setSelectedDelete(false);
   };
 
   const increase = (item) => {
     setLoading(true);
     GLOBAL.cartProducts.push(item);
-    console.log(GLOBAL.cartProducts);
     getData();
+  };
+
+  const reduceProduct = (id) => {
+    return new Promise(async (resolve, reject) => {
+      let newCart = [...GLOBAL.cartProducts];
+      try {
+        const index = GLOBAL.cartProducts.findIndex((cp) => cp.id === id);
+
+        if (index >= 0) {
+          newCart.splice(index, 1);
+        } else {
+          console.warn(`Can't remove product as its not in cart!`);
+        }
+        resolve(newCart);
+      } catch (error) {
+        reject(console.log(error));
+      }
+    });
   };
 
   const reduce = (item) => {
     const index = GLOBAL.cartProducts.findIndex((cp) => cp.id === item.id);
-    let newCart = [...GLOBAL.cartProducts];
 
     if (index >= 0) {
-      newCart.splice(index, 1);
+      GLOBAL.cartProducts.splice(index, 1);
+      getData();
+      updateItemCount();
     } else {
       console.warn(`Can't remove product as its not in cart!`);
     }
-    GLOBAL.setCartProducts(newCart);
-    // isInCart();
-    getData();
-  };
-
-  const isInCart = () => {
-    const groupItems = products.reduce((results, product) => {
-      (results[product.id] = results[product.id] || []).push(product);
-      return results;
-    }, {});
-    setGroupItemsInCart(groupItems);
-
-    GLOBAL.setItemCount(Object.keys(groupItemsInCart).length);
   };
 
   useEffect(() => {
     navigation.addListener("focus", () => {
       getData();
     });
-  }, [groupItemsInCart]);
-
-  console.log(groupItemsInCart);
+  });
 
   return (
     <>
@@ -105,23 +138,35 @@ const Cart = () => {
             onPress={() => setSelectedDelete(!selectedDelete)}
           />
         </View>
-        {Object.entries(groupItemsInCart).map(([key, items]) => (
-          <Card
-            key={key}
-            count={items.length}
-            item={items[0]}
-            selectedDelete={selectedDelete}
-            increase={() => increase(items[0])}
-            reduce={() => reduce(items[0])}
-            deleteAll={() => deleteAll(items[0].id)}
-          />
-        ))}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.productContainer}
+        >
+          {Object.entries(groupItemsInCart).map(([key, items]) => (
+            <Card
+              key={key}
+              count={items.length}
+              item={items[0]}
+              selectedDelete={selectedDelete}
+              increase={() => increase(items[0])}
+              reduce={() => reduce(items[0])}
+              deleteAll={() => deleteAll(items[0].id)}
+            />
+          ))}
+        </ScrollView>
         <RenderIf isTrue={Object.keys(groupItemsInCart).length > 0}>
           <View style={styles.footer}>
-            <Text style={styles.itemCount}>
-              {Object.keys(groupItemsInCart).length} items
-            </Text>
-            <Text style={styles.total}>{total} $</Text>
+            <View style={styles.footerText}>
+              <Text style={styles.itemCount}>
+                {Object.keys(groupItemsInCart).length} items:
+              </Text>
+              <Text style={styles.total}>{total} $</Text>
+            </View>
+            <CustomButton
+              text={"Place order"}
+              // onPress={() => navigation.navigate("Cart")}
+              bgColor={Colors.brown}
+            />
           </View>
         </RenderIf>
       </View>
