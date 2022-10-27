@@ -194,7 +194,7 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
         style={[styles.activeBackground, animatedStyles]}
       >
         <Path
-          fill="#fff"
+          fill="#F5F5F5"
           d="M18 18v-7c0 19.33 15.67 35 35 35s35-15.67 35-35v7c0-9.941 8.059-18 18-18H0c9.941 0 18 8.059 18 18z"
              />
       </AnimatedSvg>

@@ -5,6 +5,9 @@ import fonts from "../../../utils/fonts";
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: Colors.avocado,
+    marginHorizontal: 5,
+    marginBottom: 5,
+    borderRadius: 3,
   },
   activeBackground: {
     position: "absolute",
@@ -41,8 +44,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brown,
     paddingVertical: 3,
     paddingHorizontal: 5,
-    top: 0,
-    left: 16,
+    top: 3,
+    left: 15,
     color: Colors.white,
     borderRadius: 50,
   },
