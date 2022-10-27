@@ -3,6 +3,8 @@ import { UserContext } from "../../../App";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { View } from "react-native";
 import React, { useContext } from "react";
+import { useSelector } from "react-redux";
+import { groupedItemsInCart } from "../../feature/cartSlice";
 
 // screen
 import Cart from "../../screen/cart/Cart";
@@ -23,6 +25,7 @@ const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
   const GLOBAL = useContext(GlobalContext);
 
+  const products = useSelector(groupedItemsInCart);
   const [profileImg, setProfileImg] = useContext(UserContext);
   const tabLabels = {
     home: "Home",
@@ -94,9 +97,9 @@ const BottomTabNavigator = () => {
           component={Cart}
           options={{
             headerShown: false,
-            tabBarBadge: GLOBAL.itemCount,
+            tabBarBadge: Object.keys(products).length,
             tabBarBadgeStyle:
-              GLOBAL.itemCount > 0
+              Object.keys(products).length > 0
                 ? { backgroundColor: Colors.brown }
                 : { opacity: 0 },
           }}

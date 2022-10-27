@@ -13,6 +13,8 @@ import { fetchUserProfile } from "./src/api/AuthApi";
 import RenderIf from "./src/utils/RenderIf";
 import { getToken } from "./src/utils/Token";
 import { GlobalProvider } from "./src/provider/GlobalProvider";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,7 +53,8 @@ const App = () => {
 
   return (
     <>
-      <GlobalProvider>
+      {/* <GlobalProvider> */}
+      <Provider store={store}>
         <AuthContext.Provider value={[token, setToken]}>
           <UserContext.Provider value={[profileImg, setProfileImg]}>
             <NavigationContainer>
@@ -76,7 +79,8 @@ const App = () => {
             </NavigationContainer>
           </UserContext.Provider>
         </AuthContext.Provider>
-      </GlobalProvider>
+      </Provider>
+      {/* </GlobalProvider> */}
     </>
   );
 };
