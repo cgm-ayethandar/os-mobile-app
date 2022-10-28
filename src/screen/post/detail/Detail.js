@@ -4,6 +4,7 @@ import styles from "./style/Detail";
 import { AuthContext } from "../../../../App";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
 
 // api
 import { fetchPost, likePost, unlikePost } from "../../../api/PostApi";
@@ -16,72 +17,38 @@ import { Icons } from "../../../constant/Icons";
 import Separator from "../../../component/os-mobile-app/separator/Separator";
 import CustomLoading from "../../../component/os-mobile-app/customLoading/CustomLoading";
 import RenderIf from "../../../utils/RenderIf";
-import { GlobalContext } from "../../../provider/GlobalProvider";
 import CustomButton from "../../../component/os-mobile-app/customButton/CustomButton";
+import {
+  addToCart,
+  removeFromCart,
+  selectCartItemsWithId,
+} from "../../../feature/cartSlice";
 
 const Detail = ({ route }) => {
-  const GLOBAL = useContext(GlobalContext);
-  const products = GLOBAL.cartProducts;
   const { postId } = route.params;
   const navigation = useNavigation();
 
+  const dispatch = useDispatch();
   const [token, setToken] = useContext(AuthContext);
   const [product, setProduct] = useState("");
+  const items = useSelector((state) => selectCartItemsWithId(state, postId));
   const [loading, setLoading] = useState(false);
-  const [count, setCount] = useState(0);
-  const [groupItemsInCart, setGroupItemsInCart] = useState([]);
-  const [itemArr, setItemArr] = useState([]);
-  const [item, setItem] = useState({
-    id: "",
-    name: "",
-    price: "",
-    image: "",
-  });
 
   const increase = () => {
-    GLOBAL.cartProducts.push(item);
-    console.log(GLOBAL.cartProducts);
-    isInCart();
+    dispatch(
+      addToCart({
+        id: product.id,
+        name: product.car_model,
+        price: product.price,
+        image: product.images && product.images[0].url,
+      })
+    );
   };
 
   const reduce = () => {
-    if (count > 0) {
-      const index = GLOBAL.cartProducts.findIndex((cp) => cp.id === product.id);
-      let newCart = [...GLOBAL.cartProducts];
+    if (!items.length > 0) return;
 
-      if (index >= 0) {
-        newCart.splice(index, 1);
-      } else {
-        console.warn(`Can't remove product as its not in cart!`);
-      }
-      GLOBAL.setCartProducts(newCart);
-      isInCart();
-    }
-    count > 0 ? setCount(count - 1) : setCount(0);
-  };
-
-  const isInCart = () => {
-    setItemArr(
-      GLOBAL.cartProducts.filter((cp) => {
-        return cp.id == product.id;
-      })
-    );
-    setCount(itemArr.length);
-
-    const groupItems = products.reduce((results, product) => {
-      (results[product.id] = results[product.id] || []).push(product);
-      return results;
-    }, {});
-    setGroupItemsInCart(groupItems);
-
-    GLOBAL.setItemCount(Object.keys(groupItemsInCart).length);
-
-    setItem({
-      id: product.id,
-      name: product.car_model,
-      price: product.price,
-      image: product.images && product.images[0].url,
-    });
+    dispatch(removeFromCart(postId));
   };
 
   const getData = () => {
@@ -90,7 +57,6 @@ const Detail = ({ route }) => {
       .then((result) => {
         setProduct(result);
         // setLoading(false);
-        isInCart();
       })
       .catch((e) => {
         // show error message
@@ -124,7 +90,7 @@ const Detail = ({ route }) => {
 
   useEffect(() => {
     getData();
-  }, [itemArr]);
+  }, []);
 
   return (
     <>
@@ -183,7 +149,7 @@ const Detail = ({ route }) => {
                   size={32}
                   onPress={reduce}
                 />
-                <Text style={styles.countText}>{count}</Text>
+                <Text style={styles.countText}>{items.length}</Text>
                 <Ionicons
                   color={Colors.avocado}
                   name={Icons.add}
