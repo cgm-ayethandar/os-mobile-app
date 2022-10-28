@@ -4,13 +4,15 @@ import styles from "./style/NoProduct";
 
 const NoProduct = () => {
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../../../assets/empty-cart.png")}
-        style={styles.image}
-      />
-      <Text style={styles.text}>No Products Yet</Text>
-    </View>
+    <>
+      <View style={styles.container}>
+        <Image
+          source={require("../../../assets/empty-cart.png")}
+          style={styles.image}
+        />
+        <Text style={styles.text}>No Products Yet</Text>
+      </View>
+    </>
   );
 };
 

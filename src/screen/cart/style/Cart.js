@@ -4,10 +4,16 @@ import fonts from "../../../utils/fonts";
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 10,
+    height: "100%",
+    // marginHorizontal: 10,
     marginBottom: 45,
+    flexDirection: "column",
     alignItems: "center",
-    flex: 5,
+    justifyContent: "center",
+  },
+  productContainer: {
+    width: "98%",
+    alignItems: "center",
   },
   header: {
     width: "100%",
@@ -23,21 +29,35 @@ const styles = StyleSheet.create({
     color: Colors.yellow,
   },
   footer: {
-    flex: 1,
-    width: "95%",
-    marginTop: 10,
+    width: "100%",
+    marginTop: 8,
+    paddingVertical: 12,
     flexDirection: "row",
     alignItems: "center",
+    borderTopWidth: 1,
+    borderColor: Colors.platinum,
+    backgroundColor: Colors.white,
     justifyContent: "space-between",
     paddingHorizontal: 10,
     alignSelf: "flex-end",
+    shadowColor: Colors.black,
+    shadowOffset: {
+      height: 2,
+      width: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  footerText: {
+    flexDirection: "row",
   },
   itemCount: {
-    ...fonts.style.bigNormal,
+    ...fonts.style.regularNormal,
     color: Colors.avocado,
+    marginRight: 5,
   },
   total: {
-    ...fonts.style.bigNormal,
+    ...fonts.style.regularBold,
     color: Colors.brown,
   },
 });
