@@ -93,12 +93,11 @@ export const fetchFavoritePost = async (token) => {
 
 export const likePost = async (token, id) => {
   return new Promise(async (resolve, reject) => {
-    console.log(token);
     const subUrl = "api/post/favorite/" + id;
     postHeader.headers.Authorization = `Bearer ${token}`;
 
     try {
-      const response = await axiosInstance.post(subUrl, postHeader);
+      const response = await axiosInstance.post(subUrl, {}, postHeader);
       resolve(response.data);
     } catch (error) {
       reject(extractError(error));
