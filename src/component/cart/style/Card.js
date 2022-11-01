@@ -4,11 +4,12 @@ import fonts from "../../../utils/fonts";
 
 const styles = StyleSheet.create({
   container: {
-    width: "95%",
+    width: "90%",
     backgroundColor: Colors.white,
     borderRadius: 1,
     borderColor: Colors.yellow,
     marginVertical: 5,
+    marginLeft: 10,
     padding: 10,
     flexDirection: "row",
     borderRadius: 5,
@@ -21,11 +22,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 5,
-  },
-  delete: {
-    top: -10,
-    left: 93,
-    zIndex: 1,
   },
   detail: {
     marginLeft: 5,

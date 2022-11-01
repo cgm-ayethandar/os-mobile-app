@@ -8,28 +8,37 @@ import {
   Text,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../../App";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import styles from "./style/Home";
 
 // api
-import { fetchAllPosts, fetchMorePosts } from "../../api/PostApi";
+import {
+  fetchAllPosts,
+  fetchBuildTypes,
+  fetchMorePosts,
+} from "../../api/PostApi";
 import { fetchPopularPosts } from "../../api/PostApi";
 
 // component
 import CardLarge from "../../component/home/body/CardLarge";
 import CardSmall from "../../component/home/body/CardSmall";
 import LatestUploads from "../../component/home/body/LatestUploads";
+import ProfileIcon from "../../component/home/header/ProfileIcon";
 import SearchBox from "../../component/home/header/SearchBox";
 import Title from "../../component/home/body/Title";
 import RenderIf from "../../utils/RenderIf";
 import { Colors } from "../../constant/Colors";
 import CustomLoading from "../../component/os-mobile-app/customLoading/CustomLoading";
+import Category from "../../component/home/body/Category";
 
 const Home = () => {
   const navigation = useNavigation();
+  const [profileImg, setProfileImg] = useContext(UserContext);
 
   const [token, setToken] = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
   const [latestProducts, setLatestProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
@@ -40,6 +49,17 @@ const Home = () => {
       .then((result) => {
         setProducts([...products, ...result.data]);
         setNextPage(result.links.next);
+      })
+      .catch((e) => {
+        // show error message
+        console.log(e.message);
+      });
+  };
+
+  const getCategories = () => {
+    fetchBuildTypes()
+      .then((result) => {
+        setCategories(result.data.slice(0, 8));
       })
       .catch((e) => {
         // show error message
@@ -71,6 +91,7 @@ const Home = () => {
         // show error message
         console.log(e.message);
       });
+    getCategories();
   };
 
   useEffect(() => {
@@ -121,8 +142,22 @@ const Home = () => {
       <RenderIf isTrue={!loading}>
         <View style={styles.container}>
           {/* Search */}
-          <SearchBox onChangeText={() => navigation.navigate("Search")} />
+          <View style={styles.header}>
+            <SearchBox onChangeText={() => navigation.navigate("Search")} />
+            <ProfileIcon profileImg={profileImg} />
+          </View>
           <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Categories */}
+            <Title text={"Categories"} />
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {categories.map((category) => (
+                <Category key={category.id} category={category} />
+              ))}
+            </ScrollView>
+
             {/* Latest Uploads */}
             <Title text={"Latest Uploads"} />
             <LatestUploads products={latestProducts} />
@@ -135,6 +170,7 @@ const Home = () => {
             >
               {popularProducts.map((product) => (
                 <CardLarge
+                  key={product.id}
                   id={product.id}
                   img={product.images[0].url}
                   isFavorite={product.isFavorite}

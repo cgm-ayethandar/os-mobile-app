@@ -6,21 +6,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 // constant
 import { Colors } from "../../constant/Colors";
 import { Icons } from "../../constant/Icons";
-import RenderIf from "../../utils/RenderIf";
 
-const Card = ({ count, item, increase, reduce, selectedDelete, deleteAll }) => {
+const Card = ({ count, item, increase, reduce }) => {
   return (
     <>
       <View style={styles.container}>
-        <RenderIf isTrue={selectedDelete}>
-          <Ionicons
-            color={Colors.red}
-            name={Icons.delete}
-            size={25}
-            style={styles.delete}
-            onPress={deleteAll}
-          />
-        </RenderIf>
         <View style={styles.imageContainer}>
           <Image source={{ uri: item.image }} style={styles.image} />
         </View>

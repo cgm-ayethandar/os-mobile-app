@@ -20,10 +20,12 @@ const Stack = createNativeStackNavigator();
 
 export const AuthContext = createContext();
 export const UserContext = createContext();
+export const SelectedIdsContext = createContext();
 
 const App = () => {
   const [token, setToken] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const deleteToken = async () => {
     await AsyncStorage.removeItem("token");
@@ -57,26 +59,28 @@ const App = () => {
       <Provider store={store}>
         <AuthContext.Provider value={[token, setToken]}>
           <UserContext.Provider value={[profileImg, setProfileImg]}>
-            <NavigationContainer>
-              <RenderIf isTrue={token == null}>
-                <Stack.Navigator>
-                  <Stack.Screen
-                    component={AuthNavigator}
-                    name="Auth"
-                    options={{ headerShown: false }}
-                  />
-                </Stack.Navigator>
-              </RenderIf>
-              <RenderIf isTrue={token != null}>
-                <Stack.Navigator>
-                  <Stack.Screen
-                    component={DashboardNavigator}
-                    name="Dashboard"
-                    options={{ headerShown: false }}
-                  />
-                </Stack.Navigator>
-              </RenderIf>
-            </NavigationContainer>
+            <SelectedIdsContext.Provider value={[selectedIds, setSelectedIds]}>
+              <NavigationContainer>
+                <RenderIf isTrue={token == null}>
+                  <Stack.Navigator>
+                    <Stack.Screen
+                      component={AuthNavigator}
+                      name="Auth"
+                      options={{ headerShown: false }}
+                    />
+                  </Stack.Navigator>
+                </RenderIf>
+                <RenderIf isTrue={token != null}>
+                  <Stack.Navigator>
+                    <Stack.Screen
+                      component={DashboardNavigator}
+                      name="Dashboard"
+                      options={{ headerShown: false }}
+                    />
+                  </Stack.Navigator>
+                </RenderIf>
+              </NavigationContainer>
+            </SelectedIdsContext.Provider>
           </UserContext.Provider>
         </AuthContext.Provider>
       </Provider>

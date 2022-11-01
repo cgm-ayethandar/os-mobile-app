@@ -80,8 +80,9 @@ const BottomTabNavigator = () => {
           component={Home}
           name="Home"
           options={{
-            headerTitle: "",
-            headerRight: () => <ProfileIcon profileImg={profileImg} />,
+            // headerTitle: "",
+            headerShown: false,
+            // headerRight: () => <ProfileIcon profileImg={profileImg} />,
             tabBarIcon: ({active}) => <Ionicons
             color={active ? Colors.brown : Colors.white}
             name={active ? "home-outline" : "home"}

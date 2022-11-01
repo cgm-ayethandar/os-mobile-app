@@ -131,3 +131,16 @@ export const actionSearch = async (model) => {
     }
   });
 };
+
+export const fetchBuildTypes = async () => {
+  return new Promise(async (resolve, reject) => {
+    const subUrl = "api/build-types";
+
+    try {
+      const response = await axiosInstance.get(subUrl, postHeader);
+      resolve(response.data);
+    } catch (error) {
+      reject(extractError(error));
+    }
+  });
+};

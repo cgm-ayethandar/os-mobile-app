@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import styles from "./style/Cart";
 import Card from "../../component/cart/Card";
@@ -21,18 +21,37 @@ import CustomLoading from "../../component/os-mobile-app/customLoading/CustomLoa
 import CustomButton from "../../component/os-mobile-app/customButton/CustomButton";
 import NoProduct from "../../component/cart/NoProduct";
 import OrderDetail from "../../component/cart/OrderDetail";
+import Checkbox from "../../component/os-mobile-app/checkbox/Checkbox";
+import { SelectedIdsContext } from "../../../App";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const cartTotal = useSelector(selectCartTotal);
   const products = useSelector(groupedItemsInCart);
   const [loading, setLoading] = useState(false);
-  const [selectedDelete, setSelectedDelete] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
+  const [selectedIds, setSelectedIds] = useContext(SelectedIdsContext);
+  const [total, setTotal] = useState(0);
 
-  const deleteAll = (id) => {
-    dispatch(deleteFromCart(id));
-    setSelectedDelete(!selectedDelete);
+  const getTotal = () => {
+    let result = 0;
+    Object.entries(products).map(([key, items]) => {
+      selectedIds.map((sid) => {
+        if (sid == key) {
+          result = result + items[0].price * items.length;
+        }
+      });
+    });
+    return result;
+  };
+
+  useEffect(() => {
+    setTotal(getTotal);
+  }, [products, selectedIds]);
+
+  const deleteAll = () => {
+    selectedIds.map((sid) => dispatch(deleteFromCart(sid)));
+    setSelectedIds([]);
   };
 
   const increase = (item) => {
@@ -41,6 +60,11 @@ const Cart = () => {
 
   const reduce = (id) => {
     dispatch(removeFromCart(id));
+  };
+
+  const placeOrder = () => {
+    deleteAll();
+    setShowDetail(false);
   };
 
   return (
@@ -56,12 +80,14 @@ const Cart = () => {
             color={Colors.red}
             name={Icons.trash}
             size={30}
-            onPress={() => setSelectedDelete(!selectedDelete)}
+            // onPress={() => setSelectedDelete(!selectedDelete)}
+            onPress={deleteAll}
           />
         </View>
         <OrderDetail
           showDetail={showDetail}
           close={() => setShowDetail(false)}
+          placeOrder={placeOrder}
         />
 
         <RenderIf isTrue={Object.keys(products).length <= 0}>
@@ -73,28 +99,31 @@ const Cart = () => {
             contentContainerStyle={styles.productContainer}
           >
             {Object.entries(products).map(([key, items]) => (
-              <Card
-                key={key}
-                count={items.length}
-                item={items[0]}
-                selectedDelete={selectedDelete}
-                increase={() => increase(items[0])}
-                reduce={() => reduce(items[0].id)}
-                deleteAll={() => deleteAll(items[0].id)}
-              />
+              <View style={styles.itemContainer}>
+                <Checkbox id={items[0].id} />
+                <Card
+                  key={key}
+                  count={items.length}
+                  item={items[0]}
+                  increase={() => increase(items[0])}
+                  reduce={() => reduce(items[0].id)}
+                />
+              </View>
             ))}
           </ScrollView>
           <View style={styles.footer}>
             <View style={styles.footerText}>
               <Text style={styles.itemCount}>
-                {Object.keys(products).length}{" "}
-                {Object.keys(products).length > 1 ? "items" : "item"}
+                {/* {Object.keys(products).length}{" "}
+                {Object.keys(products).length > 1 ? "items" : "item"} */}
+                {selectedIds.length} {selectedIds.length > 1 ? "items" : "item"}
               </Text>
-              <Text style={styles.total}>{cartTotal} $</Text>
+              {/* <Text style={styles.total}>{cartTotal} $</Text> */}
+              <Text style={styles.total}>{total} $</Text>
             </View>
             <CustomButton
               onPress={() => setShowDetail(true)}
-              text={"Place order"}
+              text={"Checkout"}
               bgColor={Colors.yellow}
             />
           </View>
