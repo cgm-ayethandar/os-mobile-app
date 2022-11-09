@@ -102,7 +102,6 @@ const Home = () => {
   }, []);
 
   const renderFooter = () => {
-    // When no Post to download
     if (!nextPage) {
       return (
         <View style={styles.footer}>
