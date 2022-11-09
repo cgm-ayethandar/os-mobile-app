@@ -121,13 +121,23 @@ export const unlikePost = async (token, id) => {
 
 export const actionSearch = async (model, buildTypeId) => {
   return new Promise(async (resolve, reject) => {
-    const subUrl = "api/search" + `?car_model=${encodeURIComponent(model)}&build_type_id=${encodeURIComponent(buildTypeId)}`;
-
-    try {
-      const response = await axiosInstance.get(subUrl, postHeader);
-      resolve(response.data);
-    } catch (error) {
-      reject(extractError(error));
+    if(buildTypeId == null) {
+        const subUrl = "api/search" + `?car_model=${encodeURIComponent(model)}`;
+        try {
+            const response = await axiosInstance.get(subUrl, postHeader);
+            resolve(response.data);
+          } catch (error) {
+            reject(extractError(error));
+          }
+    }
+    else {
+        const subUrl = "api/search" + `?car_model=${encodeURIComponent(model)}&build_type_id=${encodeURIComponent(buildTypeId)}`;
+        try {
+            const response = await axiosInstance.get(subUrl, postHeader);
+            resolve(response.data);
+          } catch (error) {
+            reject(extractError(error));
+          }
     }
   });
 };

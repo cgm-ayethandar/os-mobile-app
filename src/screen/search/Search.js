@@ -17,11 +17,12 @@ const Search = ({ route }) => {
 
   useEffect(() => {
     console.log(text);
-    if (text == "" && category == null) {
+    if (text == "" && category.id == null) {
       setProducts([]);
     } else {
       actionSearch(text, category.id)
         .then((result) => {
+            console.log(category.id);
           console.log(text);
           console.log(result);
           setProducts(result.data);
