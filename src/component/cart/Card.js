@@ -7,6 +7,9 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { Colors } from "../../constant/Colors";
 import { Icons } from "../../constant/Icons";
 
+// utils
+import { USDollar } from "../../utils/CurrencyFormat";
+
 const Card = ({ count, item, increase, reduce }) => {
   return (
     <>
@@ -16,7 +19,7 @@ const Card = ({ count, item, increase, reduce }) => {
         </View>
         <View style={styles.detail}>
           <Text style={styles.detailText}>{item.name} </Text>
-          <Text style={styles.price}>{item.price} $</Text>
+          <Text style={styles.price}>{USDollar.format(item.price)} $</Text>
         </View>
         <View style={styles.countContainer}>
           <Ionicons

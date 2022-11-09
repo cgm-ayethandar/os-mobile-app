@@ -1,6 +1,6 @@
 import { AuthContext } from "../../../../App";
 import { useNavigation } from "@react-navigation/native";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import React, { useContext, useEffect, useState } from "react";
@@ -8,13 +8,18 @@ import styles from "./style/ShowProfile";
 
 // api
 import { actionLogout, fetchUserProfile } from "../../../api/AuthApi";
-import { fetchProfile } from "../../../api/UserApi";
-import RenderIf from "../../../utils/RenderIf";
+import { fetchProfile, userPostsList } from "../../../api/UserApi";
 
 // constant
 import { Colors } from "../../../constant/Colors";
 import { Icons } from "../../../constant/Icons";
 import CustomLoading from "../../../component/os-mobile-app/customLoading/CustomLoading";
+
+//component
+import CardLarge from "../../../component/home/body/CardLarge";
+
+// utils
+import RenderIf from "../../../utils/RenderIf";
 
 const ShowProfile = ({ route }) => {
   const { userId } = route.params;
@@ -22,6 +27,7 @@ const ShowProfile = ({ route }) => {
   const [token, setToken] = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({});
+  const [products, setProducts] = useState([]);
 
   const deleteToken = async () => {
     await AsyncStorage.removeItem("token");
@@ -41,6 +47,17 @@ const ShowProfile = ({ route }) => {
           // show error message
           console.log(e);
         });
+
+        userPostsList(userId)
+            .then((result) => {
+                setProducts(result);
+                setLoading(false);
+            })
+            .catch((e) => {
+                // show error message
+                console.log('error');
+                console.log(e);
+            });
     } else {
       setLoading(true);
       fetchUserProfile(token)
@@ -72,6 +89,31 @@ const ShowProfile = ({ route }) => {
       getData();
     });
   }, []);
+
+  const renderHeader = () => {
+    return (
+        <RenderIf isTrue={products.length != 0}>
+          <View style={styles.title}>
+            <Text style={styles.titleText}>Uploaded: {products.length} {products.length == 1 ? "post" : "posts"}</Text>
+          </View>
+        </RenderIf>
+    );
+  }
+
+  const ItemView = ({ item }) => {
+    return (
+        <View style={styles.card}>
+        <CardLarge
+        style={styles.card}
+        key={item.id}
+        id={item.id}
+        img={item.images[0].url}
+        isFavorite={item.isFavorite}
+        name={item.car_model}
+        price={item.price}
+      /></View>
+    );
+  };
 
   return (
     <>
@@ -108,6 +150,15 @@ const ShowProfile = ({ route }) => {
             />
           </RenderIf>
         </View>
+        <View style={styles.listContainer}>
+        <FlatList
+              data={products}
+              enableEmptySections={true}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={ItemView}
+              ListHeaderComponent={renderHeader}
+            /></View>
       </RenderIf>
     </>
   );

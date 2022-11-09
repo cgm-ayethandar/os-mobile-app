@@ -212,7 +212,7 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
               active={active}
               options={options}
               onLayout={(e) => handleLayout(e, index)}
-              onPress={() => navigation.navigate(route.name)}
+              onPress={() => navigation.navigate(route.name, route.name === "Search" ? {category: {id: null, name: ""}} : null)}
               routename={route.name}
             />
           )

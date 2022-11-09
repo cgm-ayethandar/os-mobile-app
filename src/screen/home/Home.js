@@ -31,6 +31,7 @@ import RenderIf from "../../utils/RenderIf";
 import { Colors } from "../../constant/Colors";
 import CustomLoading from "../../component/os-mobile-app/customLoading/CustomLoading";
 import Category from "../../component/home/body/Category";
+import VirtualizedList from "./VirtualizedList";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -117,7 +118,7 @@ const Home = () => {
     // Loading for next Downlaod
     return (
       <View style={styles.footer}>
-        <ActivityIndicator size="large" color={Colors.avocado} />
+        <ActivityIndicator size="small" color={Colors.avocado} />
       </View>
     );
   };
@@ -146,7 +147,8 @@ const Home = () => {
             <SearchBox onChangeText={() => navigation.navigate("Search")} />
             <ProfileIcon profileImg={profileImg} />
           </View>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <VirtualizedList>
+          {/* <ScrollView showsVerticalScrollIndicator={false}> */}
             {/* Categories */}
             <Title text={"Categories"} />
             <ScrollView
@@ -191,7 +193,8 @@ const Home = () => {
               renderItem={ItemView}
               ListFooterComponent={renderFooter}
             />
-          </ScrollView>
+          {/* </ScrollView> */}
+        </VirtualizedList>
         </View>
       </RenderIf>
     </>

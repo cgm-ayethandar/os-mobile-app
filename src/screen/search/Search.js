@@ -10,16 +10,17 @@ import SearchBox from "../../component/home/header/SearchBox";
 import CardSmall from "../../component/home/body/CardSmall";
 import RenderIf from "../../utils/RenderIf";
 
-const Search = () => {
+const Search = ({ route }) => {
+  const {category} = route.params;
   const [text, setText] = useState("");
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     console.log(text);
-    if (text == "") {
+    if (text == "" && category == null) {
       setProducts([]);
     } else {
-      actionSearch(text)
+      actionSearch(text, category.id)
         .then((result) => {
           console.log(text);
           console.log(result);
@@ -30,7 +31,7 @@ const Search = () => {
           console.log(e);
         });
     }
-  }, [text]);
+  }, [text, category.id]);
 
   const ItemView = ({ item }) => {
     return (
@@ -54,7 +55,7 @@ const Search = () => {
         />
         <RenderIf isTrue={products.length != 0}>
           <View style={styles.title}>
-            <Text style={styles.titleText}>Search Result: {text}</Text>
+            <Text style={styles.titleText}>Search Result: {text} {category.name}</Text>
           </View>
         </RenderIf>
         <FlatList

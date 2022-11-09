@@ -23,6 +23,7 @@ import NoProduct from "../../component/cart/NoProduct";
 import OrderDetail from "../../component/cart/OrderDetail";
 import Checkbox from "../../component/os-mobile-app/checkbox/Checkbox";
 import { SelectedIdsContext } from "../../../App";
+import { USDollar } from "../../utils/CurrencyFormat";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -119,7 +120,7 @@ const Cart = () => {
                 {selectedIds.length} {selectedIds.length > 1 ? "items" : "item"}
               </Text>
               {/* <Text style={styles.total}>{cartTotal} $</Text> */}
-              <Text style={styles.total}>{total} $</Text>
+              <Text style={styles.total}>{USDollar.format(total)}</Text>
             </View>
             <CustomButton
               onPress={() => setShowDetail(true)}

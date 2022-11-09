@@ -47,6 +47,23 @@ const styles = StyleSheet.create({
     // bottom: 235,
     // left: 280,
   },
+  title: {
+    marginVertical: 10,
+    marginLeft: 20,
+    width: "100%",
+  },
+  titleText: {
+    ...fonts.style.regularBold,
+    textAlign: "left",
+    color: Colors.avocado,
+  },
+  card: {
+    marginTop: 10,
+  },
+  listContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export default styles;
