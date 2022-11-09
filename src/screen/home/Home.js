@@ -123,14 +123,14 @@ const Home = () => {
   };
 
   const ItemView = ({ item }) => {
-    return (
-      <CardSmall
-        id={item.id}
+    return (      id={item.id}
         img={item.images[0].url}
         isFavorite={item.isFavorite}
         name={item.car_model}
         price={item.price}
       />
+      <CardSmall
+  
     );
   };
 
