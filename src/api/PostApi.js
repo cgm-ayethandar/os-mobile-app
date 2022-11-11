@@ -20,9 +20,11 @@ const extractError = (raw) => {
   };
 };
 
-export const fetchPopularPosts = async () => {
+export const fetchPopularPosts = async (token) => {
   return new Promise(async (resolve, reject) => {
     const subUrl = "api/post/popular";
+
+    postHeader.headers.Authorization = `Bearer ${token}`;
 
     try {
       const response = await axiosInstance.get(subUrl, postHeader);

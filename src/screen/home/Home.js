@@ -85,7 +85,7 @@ const Home = () => {
     fetchPopularPosts(token)
       .then((result) => {
         setLoading(true);
-        setPopularProducts(result);
+        setPopularProducts(result.data);
         setLoading(false);
       })
       .catch((e) => {
