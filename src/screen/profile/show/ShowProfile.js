@@ -20,6 +20,8 @@ import CardLarge from "../../../component/home/body/CardLarge";
 
 // utils
 import RenderIf from "../../../utils/RenderIf";
+import PrintPdf from "../../../component/print/PrintPdf";
+import BarcodeScanner from "../../../component/scanner/BarcodeScanner";
 
 const ShowProfile = ({ route }) => {
   const { userId } = route.params;
@@ -28,6 +30,7 @@ const ShowProfile = ({ route }) => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({});
   const [products, setProducts] = useState([]);
+  const [scan, setScan] = useState(false);
 
   const deleteToken = async () => {
     await AsyncStorage.removeItem("token");
@@ -150,6 +153,11 @@ const ShowProfile = ({ route }) => {
             />
           </RenderIf>
         </View>
+        <PrintPdf name={profile.name} image={profile.image} />
+        <BarcodeScanner scan={scan}/>
+        <TouchableOpacity style={styles.logout} onPress={() => setScan(!scan)}>
+              <Text style={styles.logoutText}>Logout</Text>
+            </TouchableOpacity>
         <View style={styles.listContainer}>
         <FlatList
               data={products}

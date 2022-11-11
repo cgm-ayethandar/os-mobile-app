@@ -24,6 +24,7 @@ import {
   selectCartItemsWithId,
 } from "../../../feature/cartSlice";
 import { USDollar } from "../../../utils/CurrencyFormat";
+import PrintPdf from "../../../component/print/PrintPdf";
 
 const Detail = ({ route }) => {
   const { postId } = route.params;
@@ -164,6 +165,8 @@ const Detail = ({ route }) => {
                 bgColor={Colors.brown}
               />
             </View>
+          <PrintPdf name={product.car_model} image={product.images && product.images[0].url} />
+            
           </View>
         </View>
       </RenderIf>
