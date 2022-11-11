@@ -126,7 +126,7 @@ const ShowProfile = ({ route }) => {
             <Image
               source={
                 profile.image
-                  ? { uri: profile.image }
+                ? { uri: `data:image/gif;base64,${profile.image}` }
                   : require("../../../../assets/profile.png")
               }
               style={styles.image}

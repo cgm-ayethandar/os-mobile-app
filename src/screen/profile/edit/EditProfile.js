@@ -137,7 +137,7 @@ const EditProfile = ({ route }) => {
               image
                 ? { uri: `data:image/gif;base64,${image}` }
                 : profile.image
-                ? { uri: profile.image }
+                ? { uri: `data:image/gif;base64,${profile.image}` }
                 : require("../../../../assets/profile.png")
             }
             style={styles.image}
