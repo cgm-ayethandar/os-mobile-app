@@ -6,7 +6,9 @@ import { Colors } from "../../../constant/Colors";
 
 const Separator = () => {
   return (
-    <View style={{ borderWidth: 0.5, borderColor: Colors.platinum }}></View>
+    <View
+      style={{ width: "100%", borderWidth: 0.5, borderColor: Colors.platinum }}
+    ></View>
   );
 };
 

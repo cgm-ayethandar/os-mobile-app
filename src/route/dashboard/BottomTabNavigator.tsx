@@ -7,6 +7,8 @@ import { UserContext } from "../../../App";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { View, Text, Pressable, LayoutChangeEvent } from "react-native";
 import React, { useContext, useEffect, useReducer, useRef } from "react";
+import { useSelector } from "react-redux";
+import { groupedItemsInCart } from "../../feature/cartSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 // svg
 import Svg, { Path } from "react-native-svg";
@@ -38,6 +40,7 @@ const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
 const BottomTabNavigator = () => {
   const GLOBAL = useContext(GlobalContext);
+  const products = useSelector(groupedItemsInCart);
 
   const [profileImg, setProfileImg] = useContext(UserContext);
   const tabLabels = {
@@ -77,8 +80,9 @@ const BottomTabNavigator = () => {
           component={Home}
           name="Home"
           options={{
-            headerTitle: "",
-            headerRight: () => <ProfileIcon profileImg={profileImg} />,
+            // headerTitle: "",
+            headerShown: false,
+            // headerRight: () => <ProfileIcon profileImg={profileImg} />,
             tabBarIcon: ({active}) => <Ionicons
             color={active ? Colors.brown : Colors.white}
             name={active ? "home-outline" : "home"}
@@ -108,6 +112,7 @@ const BottomTabNavigator = () => {
           name="Cart"
           component={Cart}
           options={{
+            tabBarStyle: { display: "none" },
             headerShown: false,
             tabBarIcon: ({active}) => <Ionicons
             color={active ? Colors.brown : Colors.white}
@@ -115,11 +120,7 @@ const BottomTabNavigator = () => {
             size={22}
             style={!active && styles.icon}
           />,
-            tabBarBadge: GLOBAL.itemCount,
-            // tabBarBadgeStyle: 
-              // GLOBAL.itemCount > 0
-              //   ? { backgroundColor: Colors.brown }
-              //   : { opacity: 0 },
+            tabBarBadge: Object.keys(products).length,
           }}
         />
         <Tab.Screen
@@ -148,6 +149,7 @@ const BottomTabNavigator = () => {
 
 const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, descriptors } : BottomTabBarProps) => {
   const { bottom } = useSafeAreaInsets()
+  const products = useSelector(groupedItemsInCart);
 
   // get information about the components position on the screen -----
 
@@ -186,7 +188,7 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
   })
 
   return (
-    <View style={[styles.tabBar, { paddingBottom: bottom }]}>
+    <View style={[activeIndex == 2 && Object.keys(products).length > 0 ? { display: "none" } : styles.tabBar, { paddingBottom: bottom }]}>
       <AnimatedSvg
         width={106}
         height={46}
@@ -210,7 +212,7 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
               active={active}
               options={options}
               onLayout={(e) => handleLayout(e, index)}
-              onPress={() => navigation.navigate(route.name)}
+              onPress={() => navigation.navigate(route.name, route.name === "Search" ? {category: {id: null, name: ""}} : null)}
               routename={route.name}
             />
           )

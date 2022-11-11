@@ -21,7 +21,7 @@ const ProfileIcon = ({ profileImg }) => {
       >
         <RenderIf isTrue={profileImg}>
           <Image
-            source={{ uri: profileImg }}
+            source={{  uri: `data:image/gif;base64,${profileImg}` }}
             style={{ width: 30, height: 30, borderRadius: 15 }}
           />
         </RenderIf>

@@ -3,6 +3,7 @@ export const Icons = {
   address: "home-outline",
   back: "arrow-back-outline",
   cart: "cart-outline",
+  close: "close-outline",
   detail: "information-circle-outline",
   delete: "remove-circle",
   edit: "create",

@@ -1,13 +1,17 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "../../../constant/Colors";
-import { Constants } from "../../../constant/Constants";
 import fonts from "../../../utils/fonts";
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.headerHeight,
+    // marginTop: Constants.headerHeight,
     marginHorizontal: 10,
-    marginBottom: 10,
+    marginTop: 22,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingRight: 20,
   },
   footer: {
     padding: 10,

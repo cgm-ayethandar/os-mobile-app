@@ -7,6 +7,7 @@ import styles from "./style/CardLarge";
 // constant
 import { Colors } from "../../../constant/Colors";
 import { Icons } from "../../../constant/Icons";
+import { USDollar } from "../../../utils/CurrencyFormat";
 
 const CardLarge = ({ id, img, name, price, isFavorite }) => {
   const navigation = useNavigation();
@@ -25,7 +26,7 @@ const CardLarge = ({ id, img, name, price, isFavorite }) => {
           style={styles.likeButton}
         />
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.price}>$ {price}</Text>
+        <Text style={styles.price}>{USDollar.format(price)}</Text>
       </TouchableOpacity>
     </>
   );

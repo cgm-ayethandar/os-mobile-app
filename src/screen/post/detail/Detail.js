@@ -23,6 +23,7 @@ import {
   removeFromCart,
   selectCartItemsWithId,
 } from "../../../feature/cartSlice";
+import { USDollar } from "../../../utils/CurrencyFormat";
 
 const Detail = ({ route }) => {
   const { postId } = route.params;
@@ -105,7 +106,7 @@ const Detail = ({ route }) => {
           />
           <View style={styles.detailContainer}>
             <View style={styles.titleContainer}>
-              <Text style={styles.price}>$ {product.price}</Text>
+              <Text style={styles.price}>$ {USDollar.format(product.price)}</Text>
               <TouchableOpacity onPress={handleLike}>
                 <Ionicons
                   color={Colors.avocado}

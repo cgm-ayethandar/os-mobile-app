@@ -41,19 +41,24 @@ const EditProfile = ({ route }) => {
   const [emailErrorMessage, setEmailErrorMessage] = useState(null);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState(null);
   const [addressErrorMessage, setAddressErrorMessage] = useState(null);
-  const [descriptionErrorMessage, setDescriptionErrorMessage] = useState(null);
+  const [descriptionErrorMessage, setDescriptionErrorMessage] = useState(null)
   const [imageErrorMessage, setImageErrorMessage] = useState(null);
 
+  const options = {
+    title: 'Choose an Image',
+    base64: true
+ };
+
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let result = await ImagePicker.launchImageLibraryAsync(options, {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
     if (!result.cancelled) {
-      setImage(result.uri);
-      console.log(image);
+        console.log(result);
+      setImage(result.base64);
     }
   };
 
@@ -67,11 +72,12 @@ const EditProfile = ({ route }) => {
     data.append("address", address != null ? address : "");
     data.append("description", description != null ? description : "");
     if (image) {
-      data.append("image", {
-        uri: image,
-        name: "IMG_" + Math.floor(Math.random() * 1000) + ".jpg",
-        type: "image/jpeg",
-      });
+        data.append("image", image);
+    //   data.append("image", {
+    //     uri: image,
+    //     name: "IMG_" + Math.floor(Math.random() * 1000) + ".jpg",
+    //     type: "image/jpeg",
+    //   });
     }
 
     updateProfile(token, data)
@@ -82,12 +88,15 @@ const EditProfile = ({ route }) => {
           })
           .catch((e) => {
             // show error message
+            console.log(e);
             console.log(e.message?.errors);
           });
         Alert.alert("Profile Edit", result.message);
         navigation.navigate("ShowProfile", { userId: null });
       })
       .catch((e) => {
+        console.log('error');
+        console.log(e);
         setUserNameErrorMessage(null);
         setEmailErrorMessage(null);
         setPhoneErrorMessage(null);
@@ -126,9 +135,9 @@ const EditProfile = ({ route }) => {
           <Image
             source={
               image
-                ? { uri: image }
+                ? { uri: `data:image/gif;base64,${image}` }
                 : profile.image
-                ? { uri: profile.image }
+                ? { uri: `data:image/gif;base64,${profile.image}` }
                 : require("../../../../assets/profile.png")
             }
             style={styles.image}

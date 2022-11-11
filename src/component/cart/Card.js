@@ -6,27 +6,20 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 // constant
 import { Colors } from "../../constant/Colors";
 import { Icons } from "../../constant/Icons";
-import RenderIf from "../../utils/RenderIf";
 
-const Card = ({ count, item, increase, reduce, selectedDelete, deleteAll }) => {
+// utils
+import { USDollar } from "../../utils/CurrencyFormat";
+
+const Card = ({ count, item, increase, reduce }) => {
   return (
     <>
       <View style={styles.container}>
-        <RenderIf isTrue={selectedDelete}>
-          <Ionicons
-            color={Colors.red}
-            name={Icons.delete}
-            size={25}
-            style={styles.delete}
-            onPress={deleteAll}
-          />
-        </RenderIf>
         <View style={styles.imageContainer}>
           <Image source={{ uri: item.image }} style={styles.image} />
         </View>
         <View style={styles.detail}>
           <Text style={styles.detailText}>{item.name} </Text>
-          <Text style={styles.price}>{item.price} $</Text>
+          <Text style={styles.price}>{USDollar.format(item.price)} $</Text>
         </View>
         <View style={styles.countContainer}>
           <Ionicons
